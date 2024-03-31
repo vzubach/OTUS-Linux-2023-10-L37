@@ -6,7 +6,8 @@
 
 Добавление нового пользователя на сервере:  
 
-```[root@ipa ~]# ipa user-add otus-user1 --first=Otus --last=User --password
+```
+[root@ipa ~]# ipa user-add otus-user1 --first=Otus --last=User --password
 Password: 
 Введите Password ещё раз для проверки: 
 -----------------------
@@ -34,7 +35,8 @@ Added user "otus-user1"
 ```
 Проверка на клиенте:
 
-```[root@client2 ~]# kinit otus-user1
+```
+[root@client2 ~]# kinit otus-user1
 Password for otus-user1@OTUS.LAN: 
 Password expired.  You must change it now.
 Enter new password: 
