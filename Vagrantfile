@@ -32,5 +32,9 @@ Vagrant.configure("2") do |config|
       ansible.host_key_checking = "false"
       ansible.compatibility_mode = "2.0"
       ansible.become = "true"
+      ansible.host_vars = {
+        "client1.otus.lan" => {"user_id" => "1"},
+        "client2.otus.lan" => {"user_id" => "2"},
+      }
     end 
   end

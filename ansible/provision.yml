@@ -49,16 +49,16 @@
       group: root
       mode: 0644
 
-  - name: Enable IPv6 after reload
-    ansible.builtin.replace:
-      path: /etc/sysctl.conf
-      regexp: 'net.ipv6.conf.all.disable_ipv6 = 1'
-      replace: 'net.ipv6.conf.all.disable_ipv6 = 0'
-
 - name: Deploy FreeIPA server and create user otus-user
   hosts: ipa.otus.lan
   become: yes
   tasks:
+    - name: Enable IPv6 after reload
+      ansible.builtin.replace:
+        path: /etc/sysctl.conf
+        regexp: 'net.ipv6.conf.all.disable_ipv6 = 1'
+        replace: 'net.ipv6.conf.all.disable_ipv6 = 0'
+
     - name: Installing Server
       ansible.builtin.shell: "{{ item }}"
       with_items:
@@ -94,3 +94,7 @@
         - 'firewall-cmd --runtime-to-permanent'
         - 'firewall-cmd --reload'
         - 'echo -e "yes\nyes" | ipa-client-install --mkhomedir --domain=OTUS.LAN --server=ipa.otus.lan --no-ntp -p admin -w 12345678'
+        - 'useradd otus-user{{ user_id }}'
+        - 'su -c ''ssh-keygen -qt rsa -N "" -f ~/.ssh/id_rsa'' otus-user{{ user_id }}'
+        - 'echo 12345678 | kinit admin'
+        - 'echo 24789990 | ipa user-add otus-user{{ user_id }} --first=Otus --last=User{{ user_id }} --password --sshpubkey="$(cat /home/otus-user{{ user_id }}/.ssh/id_rsa.pub)"'
